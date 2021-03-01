@@ -1,0 +1,14 @@
+.form {
+  &-group {
+    margin-top: 0.75rem;
+  }
+
+  &-control {
+    border: 2px solid $main-color;
+    outline: none;
+    height: 1.2rem;
+    border-radius: 0.75rem;
+    padding: 0.45rem 0.75rem;
+    width: 92%;
+  }
+}
