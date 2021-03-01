@@ -3,9 +3,9 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { signUpPending, signUpSuccess, signUpFailure } from "./signup.slice";
-import {  userSignUp } from "../../../helper/rest.api";
+import { userSignUp } from "../../../helper/rest.api";
 
-const SignUp: FC<RouteComponentProps> = ({ history }) =>  {
+const SignUp: FC<RouteComponentProps> = ({ history }) => {
   // redux setup
   const dispatch = useDispatch();
   const { isLoading, error } = useSelector((state: RootState) => state.signup);
@@ -24,9 +24,13 @@ const SignUp: FC<RouteComponentProps> = ({ history }) =>  {
       const result = await userSignUp({ username, password, email });
       console.log(result);
       dispatch(signUpSuccess());
-      history.push('/home')
+      history.push("/home");
     } catch (error) {
-      let e = error.response.data.message || error.message;
+      let e;
+      if (error.response) {
+        e = error.response.message;
+      }
+      e = error.message;
       dispatch(signUpFailure(e));
     }
   };
@@ -92,6 +96,6 @@ const SignUp: FC<RouteComponentProps> = ({ history }) =>  {
       </div>
     </div>
   );
-}
+};
 
 export default SignUp;

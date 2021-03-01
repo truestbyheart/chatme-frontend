@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
 const token = localStorage.getItem('token');
-const socket = io('http://localhost:3001', { query: { token: token as string }});
+const socket = io('https://chatme-back.herokuapp.com', { query: { token: token as string }});
 
 export default socket;

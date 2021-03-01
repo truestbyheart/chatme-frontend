@@ -28,7 +28,11 @@ const Login: FC<RouteComponentProps> = ({ history }) => {
       dispatch(loginSuccess());
       history.push("/home");
     } catch (error) {
-      let e = error.response.data.message || error.message;
+     let e;
+     if (error.response) {
+       e = error.response.message;
+     }
+     e = error.message;
       dispatch(loginFailure(e));
     }
   };
