@@ -26,7 +26,7 @@ const messageSlice = createSlice({
         },
         retrivedMessages: (state, { payload }) => {
             state.isLoading = false;
-            state.messages =[...state.messages, ...payload];
+            state.messages = [...state.messages, ...payload];
         },
         receivedMessage:(state, {payload}) => {
             state.isLoading = false;

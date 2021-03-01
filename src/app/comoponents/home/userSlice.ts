@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IUserDetails } from '../../../helper/rest.api';
 
 interface IUsers {
-    users: string[];
+    users: IUserDetails[];
     isLoading: boolean;
     error: string;
 }
@@ -21,7 +22,11 @@ const userSlice = createSlice({
         },
         retrivedUsers: (state, { payload }) => {
             state.isLoading = false;
-            state.users = [...state.users, ...payload];
+            state.users = [ ...payload];
+        },
+        newUser: (state, { payload }) => {
+            state.isLoading = false;
+            state.users.push(payload);
         },
         failedToGetUsers: (state, { payload }) => {
             state.isLoading = false;
@@ -32,6 +37,6 @@ const userSlice = createSlice({
 
 const { reducer, actions } = userSlice;
 
-export const { gettingUsers, retrivedUsers, failedToGetUsers } = actions;
+export const { gettingUsers, retrivedUsers, failedToGetUsers, newUser } = actions;
 
 export default reducer;

@@ -2,12 +2,14 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import loginReducer from './comoponents/login/login.slice';
 import messageReducer from './comoponents/home/messageSlice';
 import userReducer from './comoponents/home/userSlice';
+import SignUpReducer from './comoponents/Signup/signup.slice';
 
 export const store = configureStore({
   reducer: {
     login: loginReducer,
     message: messageReducer,
-    users: userReducer
+    users: userReducer,
+    signup: SignUpReducer
   },
 });
 

@@ -2,34 +2,32 @@ import React, { FC, useState } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { loginPending, loginSuccess, loginFailure } from "./login.slice";
-import { userLogin } from "../../../helper/rest.api";
+import { signUpPending, signUpSuccess, signUpFailure } from "./signup.slice";
+import {  userSignUp } from "../../../helper/rest.api";
 
-const Login: FC<RouteComponentProps> = ({ history }) => {
+const SignUp: FC<RouteComponentProps> = ({ history }) =>  {
   // redux setup
   const dispatch = useDispatch();
-  const { isLoading, error } = useSelector((state: RootState) => state.login);
+  const { isLoading, error } = useSelector((state: RootState) => state.signup);
 
   // states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   // send creds to server
   const sendAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginPending());
+    dispatch(signUpPending());
     console.log({ username, password });
     try {
-      const result = await userLogin({ username, password });
+      const result = await userSignUp({ username, password, email });
       console.log(result);
-      if (result.status === 401) {
-        dispatch(loginFailure(result.message));
-      }
-      dispatch(loginSuccess());
-      history.push("/home");
+      dispatch(signUpSuccess());
+      history.push('/home')
     } catch (error) {
       let e = error.response.data.message || error.message;
-      dispatch(loginFailure(e));
+      dispatch(signUpFailure(e));
     }
   };
 
@@ -55,6 +53,17 @@ const Login: FC<RouteComponentProps> = ({ history }) => {
             </div>
             <div className="form-group">
               <input
+                type="email"
+                name="email"
+                className="form-control"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="form-group">
+              <input
                 type="password"
                 name="password"
                 className="form-control"
@@ -70,12 +79,12 @@ const Login: FC<RouteComponentProps> = ({ history }) => {
                 type="submit"
                 disabled={isLoading}
               >
-                Login
+                SignUp
               </button>
             </div>
             <div className="form-group">
               <div className="text-center mb-2">
-                <Link to="/signup">Create account</Link>
+                <Link to="/">Login</Link>
               </div>
             </div>
           </form>
@@ -83,6 +92,6 @@ const Login: FC<RouteComponentProps> = ({ history }) => {
       </div>
     </div>
   );
-};
+}
 
-export default Login;
+export default SignUp;

@@ -4,15 +4,6 @@ const fetch = axios.create({
   baseURL: 'http://localhost:3001'
 })
 
-export interface ILoginCreds {
-  username: string;
-  password: string;
-}
-export interface ICommonResponse {
-  status: number;
-  message: string;
-}
-
 export interface IMessageStructure {
   id: string;
   message: string;
@@ -23,17 +14,31 @@ export interface IMessageStructure {
   deletedat: string;
 }
 
-export interface IMessagesResponse {
-  status: number;
-  result: IMessageStructure[]
+export interface IUserDetails {
+  id: string;
+  username: string;
 }
+
+export interface ILoginCreds {
+  username: string;
+  password: string;
+}
+export interface ICommonResponse {
+  status: number;
+  username?: string;
+  message?: string;
+  users?: IUserDetails[];
+  result?: IMessageStructure[]
+}
+
+
 
 export const userLogin = async (creds: ILoginCreds): Promise<ICommonResponse> => {
   return new Promise(async (resolve, reject) => {
     try {
       const { data } = await fetch.post('/auth/login', creds);
-      console.log(data);
       localStorage.setItem('token', data.token);
+      localStorage.setItem('currentUser', data.username);
       resolve(data);
     } catch (error) {
       reject(error);
@@ -41,7 +46,7 @@ export const userLogin = async (creds: ILoginCreds): Promise<ICommonResponse> =>
   })
 }
 
-export const retrieveMessages = (username: string): Promise<IMessagesResponse | ICommonResponse>=> {
+export const retrieveMessages = (username: string): Promise<ICommonResponse>=> {
   return new Promise(async (resolve, reject) => {
     try {
       const token = localStorage.getItem('token');
@@ -53,11 +58,36 @@ export const retrieveMessages = (username: string): Promise<IMessagesResponse | 
   })
 }
 
-export const sendAPIMessage = (messagePayload: { to: string; message: string }): Promise<IMessagesResponse | ICommonResponse> => {
+export const sendAPIMessage = (messagePayload: { to: string; message: string }): Promise<ICommonResponse> => {
   return new Promise(async (resolve, reject) => {
     try {
       const token = localStorage.getItem('token');
       const { data } = await fetch.post('/messages/send-message', messagePayload, { headers: { authorization: token } });
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+export const getUserlist = (): Promise<ICommonResponse> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = localStorage.getItem('token');
+      const { data } = await fetch.get('/users', { headers: { authorization: token } });
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  })
+}
+
+export const userSignUp = (creds: { username: string; password: string; email: string}): Promise<ICommonResponse> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { data } = await fetch.post('/auth/signup', creds);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('currentUser', data.username);
       resolve(data);
     } catch (error) {
       reject(error);
