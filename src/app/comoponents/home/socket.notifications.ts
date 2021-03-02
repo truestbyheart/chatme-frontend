@@ -1,10 +1,9 @@
-// import socket from "../../../helper/notification";
 import { IMessageStructure } from "../../../helper/rest.api";
 import { io, Socket } from 'socket.io-client';
 
 let socket: Socket;
 export const initializeSocket = (room: string) => {
-    socket = io('https://chatme-back.herokuapp.com', { query: { chatID: room as string } })
+    socket = io('__add__link', { query: { chatID: room as string } })
     socket.emit('join', room);
 }
 

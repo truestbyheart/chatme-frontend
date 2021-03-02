@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const fetch = axios.create({
-  baseURL: 'https://chatme-back.herokuapp.com'
+  baseURL: '__add__link'
 })
 
 export interface IMessageStructure {
@@ -36,7 +36,7 @@ export interface ICommonResponse {
 export const userLogin = async (creds: ILoginCreds): Promise<ICommonResponse> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { data } = await fetch.post('/auth/login', creds);
+      const { data } = await fetch.post('/auth/login', creds, { headers: { 'Content-Type': 'application/json' } });
       localStorage.setItem('token', data.token);
       localStorage.setItem('currentUser', data.username);
       resolve(data);
@@ -46,7 +46,7 @@ export const userLogin = async (creds: ILoginCreds): Promise<ICommonResponse> =>
   })
 }
 
-export const retrieveMessages = (username: string): Promise<ICommonResponse>=> {
+export const retrieveMessages = (username: string): Promise<ICommonResponse> => {
   return new Promise(async (resolve, reject) => {
     try {
       const token = localStorage.getItem('token');
@@ -82,7 +82,7 @@ export const getUserlist = (): Promise<ICommonResponse> => {
   })
 }
 
-export const userSignUp = (creds: { username: string; password: string; email: string}): Promise<ICommonResponse> => {
+export const userSignUp = (creds: { username: string; password: string; email: string }): Promise<ICommonResponse> => {
   return new Promise(async (resolve, reject) => {
     try {
       const { data } = await fetch.post('/auth/signup', creds);
